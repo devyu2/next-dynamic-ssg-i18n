@@ -1,11 +1,11 @@
 import { FC } from "react";
 
 interface IProps {
-    text: string;
+  text: string;
 }
 
-const Footer:FC<IProps> = ({text}) => {
-    return <div>{text}</div>
-}
+const Footer: FC<IProps> = ({ text }) => {
+  return <div>{text}</div>;
+};
 
 export default Footer;

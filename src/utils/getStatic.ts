@@ -19,6 +19,9 @@ export async function getI18nProps(
   ns = ["common"],
 ) {
   const locale = ctx?.params?.locale;
+
+  console.log("locale :", locale, ns);
+
   const props = {
     ...(await serverSideTranslations(
       typeof locale === "string" ? locale : i18nextConfig.i18n.defaultLocale,
