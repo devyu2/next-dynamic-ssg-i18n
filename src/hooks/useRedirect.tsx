@@ -1,4 +1,3 @@
-import languageDetector from "@/config/languageDetector";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import i18nextConfig from "../../next-i18next.config";
@@ -7,35 +6,24 @@ export const useRedirect = (to?: string) => {
   const router = useRouter();
   const path = to || router.asPath;
 
-  // language detection
   useEffect(() => {
-    const detectedLng =
-      languageDetector.detect() ?? i18nextConfig.i18n.defaultLocale;
+    const isExistLocale = (firstPath: string) => {
+      return i18nextConfig.i18n.locales.some(locale => locale === firstPath);
+    };
 
-    console.log("router: ", router);
-    console.log("test: ", { to, asPath: router.asPath });
+    let pathLocale = i18nextConfig.i18n.defaultLocale;
+    const pathArr = path.split("/");
+    if (pathArr.length > 1 && isExistLocale(pathArr[1])) {
+      pathLocale = pathArr[1];
+    }
 
-    console.log(
-      "detectedLng : ",
-      router.query.locale,
-      languageDetector.detect(),
-      i18nextConfig.i18n.defaultLocale,
-    );
-
-    console.log("path: ", path);
-    console.log("router.route : ", router.route);
-
-    if (path.startsWith("/" + detectedLng) && router.route === "/404") {
+    if (path.startsWith("/" + pathLocale) && router.route === "/404") {
       // prevent endless loop
-      router.replace("/" + detectedLng + router.route);
+      router.replace("/" + pathLocale + router.route);
       return;
     }
 
-    if (languageDetector.cache) {
-      languageDetector.cache(detectedLng);
-    }
-
-    router.replace("/" + detectedLng + path);
+    router.replace("/" + pathLocale + path);
   });
 
   return <></>;
